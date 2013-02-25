@@ -27,4 +27,3 @@ for i in range(len(triangle)-2,-1,-1):
             triangle[i][j] += triangle[i+1][j+1]
 print(triangle[0][0])
 
-        
