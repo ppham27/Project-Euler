@@ -133,25 +133,44 @@ def get_n_divisors(n):
         counts[f] += 1
     from functools import reduce
     return reduce(lambda x, y : x*y, [exp+1 for exp in counts if exp != 0])
-    
+
 def get_divisors(n):
     """
     Find all divisors of n, including 1 and n, itself.
     >>> get_divisors(1)
     {1}
-    >>> get_divisors(28)
-    {1, 2, 4, 7, 14, 28}
+    >>> get_divisors(28).issubset({1, 2, 4, 7, 14, 28})
+    True
+    >>> get_divisors(28).issuperset({1, 2, 4, 7, 14, 28})
+    True
     """
-    factors = factor(n)       # find prime factors
-    divisors = {1}                # start with 1 for the trivial divisor 1    
-    from combinatorics import get_combinations
-    from functools import reduce
-    proper_prime_factors = factors[1:] # subtract 1 to get rid of trivial divisor 1
-    for i in range(1,len(proper_prime_factors)+1):
-        for d in get_combinations(proper_prime_factors,i):
-            divisors.add(reduce(lambda x, y : x*y, d))
-    return divisors
+    return _factors_to_divisors(factor(n))
 
+def get_proper_divisors(n):
+    """
+    Get all divisors of n, excluding n.
+    >>> get_proper_divisors(1)
+    set()
+    >>> get_proper_divisors(28).issubset({1, 2, 4, 7, 14, 28})
+    True
+    >>> get_proper_divisors(28).issuperset({1, 2, 4, 7, 14, 28})
+    False
+    """
+    proper_divisors = get_divisors(n)
+    proper_divisors.remove(n)
+    return proper_divisors
+    
+def _factors_to_divisors(f):
+    res = {1}
+    if f is None or len(f)==0:
+        return res
+        
+    res.update(_factors_to_divisors(f[1:]))
+    for d in list(res):
+        res.add(f[0]*d)
+        
+    return res
+    
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
