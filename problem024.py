@@ -21,6 +21,5 @@ def find_nth_permutation(elmts, n, f = None):
     other_elmts.insert(0, elmt)
     return other_elmts
 
-print("".join(map(str,find_nth_permutation(list(range(3)), 1))))
 print("".join(map(str,find_nth_permutation(list(range(10)), 1000000))))
     
